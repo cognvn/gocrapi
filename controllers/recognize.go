@@ -1,0 +1,45 @@
+package controllers
+
+import (
+	"io"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strings"
+
+	"github.com/cognvn/ocrviet/services"
+	"github.com/gin-gonic/gin"
+	"github.com/otiai10/gosseract/v2"
+)
+
+// RecognizeController Controller xử lý nhận diện ảnh thành chữ
+func RecognizeController(c *gin.Context) {
+	file, err := c.FormFile("file")
+	services.ErrorHandler(c, err)
+	src, err := file.Open()
+	services.ErrorHandler(c, err)
+	defer src.Close()
+	// Create physical file
+	tempfile, err := ioutil.TempFile("", "ocrserver"+"-")
+	services.ErrorHandler(c, err)
+	defer func() {
+		tempfile.Close()
+		os.Remove(tempfile.Name())
+	}()
+	_, err = io.Copy(tempfile, src)
+	services.ErrorHandler(c, err)
+	// Handle recognize image to text
+	client := gosseract.NewClient()
+	defer client.Close()
+
+	client.SetImage(tempfile.Name())
+	client.Languages = []string{"vie"}
+
+	var out string
+	out, err = client.Text()
+	services.ErrorHandler(c, err)
+
+	c.JSON(http.StatusOK, gin.H{
+		"result": strings.Trim(out, " "),
+	})
+}
