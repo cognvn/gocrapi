@@ -12,6 +12,11 @@ import (
 	"github.com/otiai10/gosseract/v2"
 )
 
+// ResultModel Kết quả nhận diện
+type ResultModel struct {
+	Result string `json:"result"`
+}
+
 // RecognizeController Controller xử lý nhận diện ảnh thành chữ
 func RecognizeController(c *gin.Context) {
 	file, err := c.FormFile("file")
@@ -39,7 +44,7 @@ func RecognizeController(c *gin.Context) {
 	out, err = client.Text()
 	services.ErrorHandler(c, err)
 
-	c.JSON(http.StatusOK, gin.H{
-		"result": strings.Trim(out, " "),
+	c.JSON(http.StatusOK, ResultModel{
+		Result: strings.Trim(out, " "),
 	})
 }

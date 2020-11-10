@@ -1,0 +1,15 @@
+FROM golang:debian
+
+USER root
+RUN mkdir /src
+
+ADD . /src
+WORKDIR /src
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y gcc g++ libtesseract-dev tesseract-ocr-vie
+
+RUN go get -u all && \
+    go build -o ocrviet
+
+ENV PORT "8080"
+CMD ["/src/ocrviet"]

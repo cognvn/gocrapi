@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"net/http"
 
 	"github.com/cognvn/ocrviet/controllers"
 	"github.com/gin-contrib/cors"
@@ -12,8 +12,12 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.StaticFile("favicon.ico", "assets/favicon.ico")
-	r.GET("/", controllers.StatusController)
+	r.StaticFile("swagger.json", "assets/swagger.json")
+	r.GET("/status", controllers.StatusController)
 	r.POST("/recognize", controllers.RecognizeController)
+	r.NoRoute(func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/status")
+	})
+
 	r.Run()
-	log.Println("Starting server")
 }

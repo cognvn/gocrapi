@@ -9,6 +9,8 @@ import (
 // ErrorHandler Xử lý lỗi cho server
 func ErrorHandler(c *gin.Context, err error) {
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 	}
 }

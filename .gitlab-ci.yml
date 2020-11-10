@@ -1,12 +1,36 @@
+image: docker:latest
+
+before_script:
+  - apk update && apk upgrade
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
 stages:
   - build
+  - test
 
-build:
-  image: docker:latest
+build_alpine:
   stage: build
   services:
     - docker:dind
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:latest .
-    - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:latest
+    - docker build -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine .
+    - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine
+
+build_debian:
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - docker build -f Dockerfile.debian -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian .
+    - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian
+
+test:
+  stage: test
+  before_script:
+    - apk add curl
+  script:
+    - docker run -e PORT=8080 -d $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine
+    - docker run -e PORT=8081 -d $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian
+    - sleep 10
+    - curl -v http://127.0.0.1:8080/status
+    - curl -v http://127.0.0.1:8081/status
