@@ -13,8 +13,9 @@ build_alpine:
   services:
     - docker:dind
   script:
-    - docker build -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine .
+    - docker build -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:latest .
     - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine
+    - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:latest
 
 build_debian:
   stage: build
@@ -31,6 +32,6 @@ test:
   script:
     - docker run -e PORT=8080 -d $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine
     - docker run -e PORT=8081 -d $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian
-    - sleep 10
+    - sleep 20
     - curl -v http://127.0.0.1:8080/status
     - curl -v http://127.0.0.1:8081/status

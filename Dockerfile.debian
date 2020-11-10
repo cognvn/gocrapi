@@ -1,4 +1,4 @@
-FROM golang:debian
+FROM golang:buster
 
 USER root
 RUN mkdir /src

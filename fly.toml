@@ -4,7 +4,6 @@ app = "ocrviet"
 
 [env]
   PORT = "8080"
-  FLY_REGION = "sin"
 
 [[services]]
   internal_port = 8080
