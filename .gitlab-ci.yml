@@ -27,9 +27,8 @@ build_debian:
 
 test:
   stage: test
-  before_script:
-    - apk add curl
   script:
+    - apk add curl
     - docker run -e PORT=8080 -d $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine
     - docker run -e PORT=8081 -d $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian
     - sleep 20
