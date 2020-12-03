@@ -1,8 +1,10 @@
-image: docker:latest
-
-before_script:
-  - apk update && apk upgrade
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+default:
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - apk update && apk upgrade
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
 
 stages:
   - build
@@ -10,8 +12,6 @@ stages:
 
 build_alpine:
   stage: build
-  services:
-    - docker:dind
   script:
     - docker build -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:latest .
     - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine
@@ -19,8 +19,6 @@ build_alpine:
 
 build_debian:
   stage: build
-  services:
-    - docker:dind
   script:
     - docker build -f Dockerfile.debian -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian .
     - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian
