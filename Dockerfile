@@ -1,21 +1,27 @@
 FROM golang:alpine
 
 USER root
-RUN mkdir /src
+RUN mkdir /go/app
 
-ADD . /src
-WORKDIR /src
+ADD . /go/app
+WORKDIR /go/app
+
 # Install tesseract and data
 RUN apk update && apk upgrade && \
-    apk add gcc g++ tesseract-ocr-dev tesseract-ocr-data-vie
+    apk add gcc g++ bash tesseract-ocr-dev
+
 # Get best trainned data
-RUN wget -O /usr/share/tessdata/vie.traineddata https://github.com/tesseract-ocr/tessdata_best/blob/master/vie.traineddata?raw=true
+ENV OCR_LANGS=vie,jpn,fra
+ENV TESSDATA_DIR=/usr/share/tessdata/
+RUN chmod +x ./get-traineddatas.sh
+RUN ./get-traineddatas.sh
+
 # Build ocr server
-RUN go get -u all && \
-    go build -o ocrviet
+RUN go get all && \
+    go build -o bin/gocrapi
 
 ENV PORT "8080"
 
 EXPOSE 8080
 
-ENTRYPOINT ["/src/ocrviet"]
+ENTRYPOINT ["/go/app/bin/gocrapi"]

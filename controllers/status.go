@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/cognvn/ocrviet/services"
+	"github.com/cognvn/gocrapi/services"
 	"github.com/otiai10/gosseract/v2"
 
 	"github.com/gin-gonic/gin"

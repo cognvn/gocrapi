@@ -13,22 +13,12 @@ stages:
 build_alpine:
   stage: build
   script:
-    - docker build -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:latest .
-    - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine
-    - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:latest
+    - docker build -t $CI_REGISTRY/gdt-bahnar/gocrapi/gocrapi:alpine -t $CI_REGISTRY/gdt-bahnar/gocrapi/gocrapi:latest .
+    - docker push $CI_REGISTRY/gdt-bahnar/gocrapi/gocrapi:alpine
+    - docker push $CI_REGISTRY/gdt-bahnar/gocrapi/gocrapi:latest
 
 build_debian:
   stage: build
   script:
-    - docker build -f Dockerfile.debian -t $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian .
-    - docker push $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian
-
-test:
-  stage: test
-  script:
-    - apk add curl
-    - docker run -e PORT=8080 -d $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:alpine
-    - docker run -e PORT=8081 -d $CI_REGISTRY/gdt-bahnar/ocrviet/ocrviet:debian
-    - sleep 20
-    - curl -v http://127.0.0.1:8080/status
-    - curl -v http://127.0.0.1:8081/status
+    - docker build -f Dockerfile.debian -t $CI_REGISTRY/gdt-bahnar/gocrapi/gocrapi:debian .
+    - docker push $CI_REGISTRY/gdt-bahnar/gocrapi/gocrapi:debian

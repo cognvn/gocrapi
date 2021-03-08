@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cognvn/ocrviet/services"
+	"github.com/cognvn/gocrapi/services"
 	"github.com/gin-gonic/gin"
 	"github.com/otiai10/gosseract/v2"
 )
@@ -38,7 +38,10 @@ func RecognizeController(c *gin.Context) {
 	defer client.Close()
 
 	client.SetImage(tempfile.Name())
-	client.Languages = []string{"vie"}
+	client.Languages = []string{os.Getenv("DEFAULT_LANG")}
+	if langs := c.PostForm("languages"); langs != "" {
+		client.Languages = strings.Split(langs, ",")
+	}
 
 	var out string
 	out, err = client.Text()

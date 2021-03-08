@@ -1,0 +1,14 @@
+{
+  "name": "OcrApi for Vietnamese",
+  "description": "Simple Golang ocr api server for Vietnamese",
+  "repository": "https://github.com/cognvn/gocrapi",
+  "logo": "https://avatars.githubusercontent.com/u/45615929?v=4",
+  "keywords": [
+    "golang",
+    "ocr",
+    "heroku"
+  ],
+  "website": "https://gocrapi.herokuapp.com",
+  "success_url": "/",
+  "stack": "container"
+}

@@ -1,9 +1,9 @@
-# fly.toml file generated for ocrviet on 2020-11-09T11:12:57+07:00
+# fly.toml file generated for gocrapi on 2021-03-31T17:13:47+07:00
 
-app = "ocrviet"
+app = "gocrapi"
 
-[env]
-  PORT = "8080"
+kill_signal = "SIGINT"
+kill_timeout = 5
 
 [[services]]
   internal_port = 8080
@@ -22,5 +22,8 @@ app = "ocrviet"
     port = "443"
 
   [[services.tcp_checks]]
-    interval = 10000
-    timeout = 2000
+    grace_period = "1s"
+    interval = "15s"
+    port = "8080"
+    restart_limit = 6
+    timeout = "2s"

@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cognvn/ocrviet/controllers"
+	"github.com/cognvn/gocrapi/controllers"
+	"github.com/cognvn/gocrapi/swagger"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -23,14 +24,20 @@ func main() {
 	}
 	r.Use(cors.New(corsConf))
 	// Static file
-	r.StaticFile("favicon.ico", "assets/favicon.ico")
-	r.StaticFile("swagger.json", "assets/swagger.json")
+	r.Static("/.well-known", "./.well-known")
 	// Routers
+	r.GET("/favicon.ico", controllers.FaviconController)
 	r.GET("/status", controllers.StatusController)
 	r.POST("/recognize", controllers.RecognizeController)
-	r.POST("/image", controllers.ImageController)
+
+	// Swagger
+	swgGroup := r.Group("/swagger")
+	{
+		swgGroup.GET("/", controllers.SwaggerController)
+		swgGroup.StaticFS("/assets", swagger.AssetFS())
+	}
 	r.NoRoute(func(c *gin.Context) {
-		c.Redirect(http.StatusMovedPermanently, "/status")
+		c.Redirect(http.StatusMovedPermanently, "/swagger")
 	})
 
 	r.Run()
