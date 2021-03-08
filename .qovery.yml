@@ -1,0 +1,10 @@
+application:
+  name: ocrviet
+  project: ocrviet
+  publicly_accessible: true
+routers:
+  - name: main
+    routes:
+      - application_name: ocrviet
+        paths:
+          - /

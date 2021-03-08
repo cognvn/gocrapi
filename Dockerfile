@@ -15,4 +15,7 @@ RUN go get -u all && \
     go build -o ocrviet
 
 ENV PORT "8080"
-CMD ["/src/ocrviet"]
+
+EXPOSE 8080
+
+ENTRYPOINT ["/src/ocrviet"]
