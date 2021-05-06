@@ -1,7 +1,11 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"net/http"
+	"os"
+	"path"
 	"time"
 
 	"github.com/cognvn/gocrapi/controllers"
@@ -40,5 +44,24 @@ func main() {
 		c.Redirect(http.StatusMovedPermanently, "/swagger")
 	})
 
-	r.Run()
+	// Get port for run
+	envPort, portOk := os.LookupEnv("PORT")
+	if !portOk {
+		envPort = "8080"
+	}
+	port := flag.String("port", envPort, "Khởi chạy ứng dụng tại cổng")
+	host := flag.String("host", "localhost", "Địa chỉ khởi chạy ứng dụng")
+	url := flag.String("url", "", "Địa chỉ khởi chạy ứng dụng")
+	flag.Parse()
+	if *url == "" {
+		*url = fmt.Sprintf("%s:%s", *host, *port)
+	}
+
+	_, preOk := os.LookupEnv("TESSDATA_PREFIX")
+	if !preOk {
+		cwd, _ := os.Getwd()
+		os.Setenv("TESSDATA_PREFIX", path.Join(cwd, "tessdata"))
+	}
+
+	r.Run(*url)
 }
