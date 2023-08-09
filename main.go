@@ -35,10 +35,11 @@ func main() {
 	r.POST("/recognize", controllers.RecognizeController)
 
 	// Swagger
+	swaggerAssets, _ := swagger.Assets()
 	swgGroup := r.Group("/swagger")
 	{
 		swgGroup.GET("/", controllers.SwaggerController)
-		swgGroup.StaticFS("/assets", swagger.AssetFS())
+		swgGroup.StaticFS("/assets", http.FS(swaggerAssets))
 	}
 	r.NoRoute(func(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/swagger")

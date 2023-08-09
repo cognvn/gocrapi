@@ -7,21 +7,20 @@ ADD . /go/app
 WORKDIR /go/app
 
 # Install tesseract and data
-RUN apk update && apk upgrade && \
-    apk add gcc g++ bash tesseract-ocr-dev
+RUN apk add --no-cache --update g++ bash musl-dev tesseract-ocr-dev
 
 # Get best trainned data
 ENV OCR_LANGS=vie,jpn,fra
-ENV TESSDATA_DIR=/usr/share/tessdata/
+ENV TESSDATA_PREFIX=/usr/share/tessdata/
 RUN chmod +x ./get-traineddatas.sh
 RUN ./get-traineddatas.sh
 
 # Build ocr server
 RUN go get all && \
-    go build -o bin/gocrapi
+    go build -o /usr/local/bin/gocrapi
 
 ENV PORT "8080"
 
 EXPOSE 8080
 
-ENTRYPOINT ["/go/app/bin/gocrapi"]
+CMD ["gocrapi"]

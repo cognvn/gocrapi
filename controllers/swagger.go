@@ -14,9 +14,9 @@ import (
 func SwaggerController(c *gin.Context) {
 	c.Writer.Header().Add("Content-Type", "text/html; charset=utf-8")
 
-	tmplByte, err := swagger.Asset("assets/swagger.tmpl")
-	services.ErrorHandler(c, err)
-	tmpl, err := template.New("swagger.html").Parse(string(tmplByte))
+	assets, _ := swagger.Assets()
+
+	tmpl, err := template.ParseFS(assets, "swagger.tmpl")
 	services.ErrorHandler(c, err)
 	var outHtml bytes.Buffer
 	tmpl.Execute(&outHtml, gin.H{

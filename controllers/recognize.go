@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -25,7 +24,7 @@ func RecognizeController(c *gin.Context) {
 	services.ErrorHandler(c, err)
 	defer src.Close()
 	// Create physical file
-	tempfile, err := ioutil.TempFile("", "ocrserver"+"-")
+	tempfile, err := os.CreateTemp("", "ocrserver"+"-")
 	services.ErrorHandler(c, err)
 	defer func() {
 		tempfile.Close()
